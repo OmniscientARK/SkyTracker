@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@font-face {
+    font-family: 'icomoon';
+    src: url("./icomoon.ttf");
+}
+
+:root{
+    --clr-neutral-100: #fafafa;
+    --clr-neutral-200: #b4b4b4;
+    --clr-neutral-500: #7e7e7e;
+    --clr-neutral-600: #545454;
+    --clr-neutral-700: #232323;
+    --clr-neutral-800: #101010;
+    --clr-accent-100: #0bca51;
+    --clr-accent-200: #09ef70;
+
+    --delay: 125ms;
+    --timing: ease-in-out;
+    --delay-timing: var(--delay) var(--timing);
+
+    --§0: #000000;
+    --§1: #0b277a;
+    --§2: #00aa00;
+    --§3: #038d8d;
+    --§4: #920909;
+    --§5: #a305a3;
+    --§6: #d88f07;
+    --§7: #636363;
+    --§8: #2f2f2f;
+    --§9: #4444f3;
+    --§a: #40bb40;
+    --§b: #33aec3;
+    --§c: #c43c3c;
+    --§d: #e668c6;
+    --§e: #efc721;
+    --§f: #929292;
+}
+
+*, *::before, *::after{
+    box-sizing: border-box;
+    margin: 0;
+    font-family: 'icomoon', 'Montserrat', sans-serif;
+    outline: none;
+}
+
+html{
+    font-weight: 600;
+    color: var(--clr-neutral-100);
+    height: 100%;
+    user-select: none;
+    scroll-behavior: smooth;
+}
+
+body{
+    height: 100%;
+    background-color: var(--clr-neutral-800);   
+    margin: 0;
+    display: flex;
+}
+
+body > section{
+    width: 100%;
+}
+
+body *{
+    transition: color var(--delay-timing), border var(--delay-timing), transform var(--delay-timing);
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+button, input{
+    padding: .5rem 1rem;
+    border: 3px solid var(--clr-neutral-700);
+    background-color: var(--clr-neutral-800);
+    color: var(--clr-neutral-200);
+    border-radius: 10000px;
+    font-weight: 700;
+}
+
+input:hover, input:focus{
+    color: var(--clr-neutral-100);
+    border: 3px solid var(--clr-neutral-600);
+}
+
+button, input[type=submit]{
+    background-color: var(--clr-accent-100);
+    color: var(--clr-neutral-100);
+    border: none;
+    cursor: pointer;
+}
+
+button:hover, input[type=submit]:hover,
+button:focus, input[type=submit]:focus{
+    background-color: var(--clr-accent-200);
+    transform: scale(1.05);
+}
+
+button.dark{
+    border: 3px solid var(--clr-neutral-600);
+    background-color: transparent;
+}
+button.dark:hover, button.dark:focus{
+    transform: none;
+    border-color: var(--clr-neutral-500);
+}

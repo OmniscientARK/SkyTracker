@@ -1,0 +1,22 @@
+{
+  "name": "skytracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -e js,vue index.js"
+  },
+  "keywords": [],
+  "author": "Omniscient",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "express-vue": "^5.16.0",
+    "fs": "^0.0.1-security",
+    "mz": "^2.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
+}
