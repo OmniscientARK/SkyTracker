@@ -13,11 +13,16 @@ let routes = [
     {
         path: ["/stats/:player", "/stats/:player/:profile"],
         async get(req, res){
-            let uuid = await dataManager.getUUID(req.params.player)
-            if(uuid == null) return res.renderVue("index.vue", {error: "The specified user wasn't found."})
-            let data = await dataManager.getData(uuid, req.params.profile)
-            if(data == null) return res.renderVue("index.vue", {error: "Error on user request."})
-            res.renderVue("stats.vue", data)
+            let uuid, data
+            try{
+                uuid = await dataManager.getUUID(req.params.player)
+                if(uuid == null) return res.renderVue("index.vue", {error: "The specified user wasn't found."})
+                data = await dataManager.getData(uuid, req.params.profile)
+                if(data == null) return res.renderVue("index.vue", {error: "An error occurred."})
+                res.renderVue("stats.vue", data)
+            }catch(ex){
+                res.renderVue("index.vue", {error: "An error occurred."})
+            }
         }
 
     }

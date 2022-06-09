@@ -7,8 +7,10 @@ class DataManager{
     constructor(path){
         this.dir = `${__dirname}\\${path}`
         this.uuidSheet = `${this.dir}\\uuids.json`
+        this.nameSheet = `${this.dir}\\names.json`
         if(!fs.existsSync(`${this.dir}`)) fs.mkdirSync(`${this.dir}`, {recursive: true})
         if(!fs.existsSync(this.uuidSheet)) fs.writeFileSync(this.uuidSheet, JSON.stringify({}))
+        if(!fs.existsSync(this.nameSheet)) fs.writeFileSync(this.nameSheet, JSON.stringify({}))
         console.log("DataManager initialized.")
     }
 
@@ -16,7 +18,11 @@ class DataManager{
         let file = fs.readFileSync(this.uuidSheet)
         let uuids = JSON.parse(file)
         uuids[player.toLowerCase()] = uuid
-        fs.writeFileSync(this.uuidSheet, JSON.stringify(uuids))
+        fs.writeFileSync(this.uuidSheet, JSON.stringify(uuids, null, "\t"))
+        file = fs.readFileSync(this.nameSheet)
+        let names = JSON.parse(file)
+        names[uuid] = player
+        fs.writeFileSync(this.nameSheet, JSON.stringify(names, null, "\t"))
     }
 
     async getUUID(player){
@@ -28,6 +34,13 @@ class DataManager{
         if(!res.data.success || res.status !== 200 || res.data.player == null) return null
         this.setUUID(res.data.player.displayname, res.data.player.uuid)
         return res.data.player.uuid
+    }
+
+    getName(uuid){
+        let file = fs.readFileSync(this.nameSheet)
+        let names = JSON.parse(file)
+        if(!names[uuid]) return null
+        return names[uuid]
     }
 
     writeFile(uuid, file, content){
@@ -44,22 +57,24 @@ class DataManager{
         if(uuid == null) return null
         await this.queryAPI(uuid)
         let player = this.readFile(uuid, "player")
-        if(player == null) return null
+        if(!player) return null
         if(player.skyblock.profiles.length === 0) return null
         if(profileName == null || profileName == undefined) profileName = player.skyblock.profiles[0].name
-        let currentProfile = player.skyblock.profiles.find(profile => profile.name.toLowerCase() === profileName.toLowerCase()) 
-        if(!currentProfile) currentProfile = player.skyblock.profiles[0]
+        let profileData = player.skyblock.profiles.find(profile => profile.name.toLowerCase() === profileName.toLowerCase()) 
+        if(!profileData) profileData = player.skyblock.profiles[0]
+        let profile = this.readFile(uuid, profileData.id)
+        if(!profile) return null
         return {
             player: player,
-            profile: currentProfile //replace currentProfile with profile data (still need to query from API)
+            profile: profile
         }
     }
 
     async queryAPI(uuid){
         let player = this.readFile(uuid, "player")
-        if(this.readFile(uuid, "player") == null || Date.now()-player._query > 120000){
+        if(player == null || Date.now()-player._query > 120000){
             let res = await get(`https://api.hypixel.net/player?key=${keyManager.getGoodKey()}&uuid=${uuid}`)
-            if(res.status !== 200 || !res.data.success || res.data.player == null) return
+            if(res.status !== 200 || !res.data.success || !res.data.player) return
             res = res.data.player
             if(!res.stats.SkyBlock) return
             let rankType = res.prefix ? res.prefix.replace(/§[a-fA-F0-9]|\[|\]/g, "")
@@ -101,6 +116,50 @@ class DataManager{
                 _query: Date.now() 
             }
             this.writeFile(uuid, "player", player)
+        }
+        for(let i = 0; i < player.skyblock.profiles.length; i++){
+            let profileData = player.skyblock.profiles[i]
+            let profile = this.readFile(uuid, profileData.id)
+            if(profile == null || Date.now()-profile._query > 120000){
+                let res = await get(`https://api.hypixel.net/skyblock/profile?key=${keyManager.getGoodKey()}&profile=${profileData.id}`)
+                if(res.status !== 200 || !res.data.success || !res.data.profile) continue
+                res = res.data.profile
+                let membersInfo = {}
+                for(let j = 0; j < Object.keys(res.members).length; j++){
+                    let memberUUID = Object.keys(res.members)[j]
+                    let memberData = this.readFile(memberUUID, "player")
+                    if(!memberData){
+                        let memberRes = await get(`https://api.hypixel.net/player?key=${keyManager.getGoodKey()}&uuid=${memberUUID}`)
+                        if(memberRes.status !== 200 || !memberRes.data.success || !memberRes.data.player || !memberRes) continue
+                        if(!memberRes.data.player.stats.SkyBlock) continue
+                        if(!Object.values(memberRes.data.player.stats.SkyBlock.profiles).find(memberProfile => memberProfile.profile_id === profileData.id)) continue
+                        membersInfo[memberUUID] = {
+                            name: memberRes.data.player.displayname,
+                            profileName: memberRes.data.player.stats.SkyBlock.profiles[profileData.id].cute_name
+                        }
+                    }else{
+                        let memberProfile = memberData.skyblock.profiles.find(memberProfile => memberProfile.id === profileData.id)
+                        if(!memberProfile) continue
+                        membersInfo[memberData.uuid] = {
+                            name: memberData.name,
+                            profileName: memberProfile.name
+                        }
+                    }
+                }
+                let members = Object.entries(res.members).filter(pair => Object.keys(membersInfo).includes(pair[0])).map(pair => {
+                    return {
+                        name: membersInfo[pair[0]].name,
+                        uuid: pair[0],
+                        profileName: membersInfo[pair[0]].profileName
+                    }
+                })
+                profile = {
+                    id: res.profile_id,
+                    members: members,
+                    _query: Date.now()
+                }
+                this.writeFile(uuid, profileData.id, profile)
+            }
         }
     }
 }

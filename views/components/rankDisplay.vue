@@ -1,6 +1,6 @@
 <template>
     <span class="display">
-        <span class="rank" :style="{backgroundColor: `var(--${rank.color})`}">{{title}}</span><span class="plus" :style="{backgroundColor: `var(--${rank.plusColor})`}" v-if="plusCount > 0">{{"+".repeat(plusCount)}}</span>
+        <span v-if="rank.type" class="rank" :style="{backgroundColor: `var(--${rank.color})`}">{{title}}</span><span class="plus" :style="{backgroundColor: `var(--${rank.plusColor})`}" v-if="plusCount > 0">{{"+".repeat(plusCount)}}</span>
     </span>
 </template>
 
@@ -11,8 +11,8 @@ export default {
     },
     data() {
         return{
-            title: this.rank.type.replaceAll("+", ""),
-            plusCount: this.rank.type.split("+").length-1
+            title: this.rank.type ? this.rank.type.replaceAll("+", "") : null,
+            plusCount: this.rank.type ? this.rank.type.split("+").length-1 : 0
         }
     }
 }

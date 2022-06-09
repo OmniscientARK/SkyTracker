@@ -15,6 +15,7 @@ export default {
         }
     },
     mounted(){
+        console.log(this.$root.error)
         window.history.replaceState({}, document.title, `/`)
     }
 }

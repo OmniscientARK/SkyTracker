@@ -4,7 +4,13 @@
         <section>
             <h1 class="heading">
                 Stats for
-                <Selector>
+                <Selector :items="$root.profile.members.map(member => {
+                    return {
+                        id: member.uuid,
+                        title: member.name,
+                        href: `/stats/${member.name}/${member.profileName}`
+                    }
+                }).filter(member => member.id !== $root.player.uuid)">
                     <RankDisplay :rank="$root.player.rank"/>
                     {{$root.player.name}}
                 </Selector>
@@ -15,7 +21,7 @@
                         title: profile.name,
                         href: `/stats/${$root.player.name}/${profile.name}`
                     }
-                }).filter(profile => profile.id !== $root.profile.id)">{{$root.profile.name}}</Selector>
+                }).filter(profile => profile.id !== $root.profile.id)">{{$root.player.skyblock.profiles.find(profile => profile.id === $root.profile.id).name}}</Selector>
             </h1>
         </section>
     </section>
@@ -30,7 +36,7 @@ export default {
         Navigation, RankDisplay, Selector
     },
     mounted() {
-        window.history.replaceState({}, document.title, `/stats/${this.$root.player.name}/${this.$root.profile.name}`)
+        window.history.replaceState({}, document.title, `/stats/${this.$root.player.name}/${this.$root.player.skyblock.profiles.find(profile => profile.id === this.$root.profile.id).name}`)
     }
 }
 </script>

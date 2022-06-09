@@ -5,7 +5,9 @@ const router = require("./router")
 const keyManager = require("./keyManager")
 const dataManager = require("./dataManager")
 
-process.env.VUE_DEV = true
+if(process.argv.length >= 2 && process.argv[2] === "true") process.env.VUE_DEV = true
+else process.env.VUE_DEV = false
+console.log(`VUE_DEV set to ${process.env.VUE_DEV}.`)
 
 const app =  express()
 const port = process.env.PORT || 80
@@ -30,7 +32,7 @@ expressVue.use(app, {
         if(Object.keys(route).includes("get")) app.get(route.path, (req, res) => route.get(req, res))
         if(Object.keys(route).includes("post")) app.get(route.path, (req, res) => route.post(req, res))
     });
-    //app.get(router.notFound.path, (req, res) => router.notFound.get(req, res))
+    app.get(router.notFound.path, (req, res) => router.notFound.get(req, res))
 })
 
 app.listen(port, () => {

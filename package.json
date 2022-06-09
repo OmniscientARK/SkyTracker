@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -e js,vue index.js"
+    "start": "node index.js",
+    "dev": "nodemon -e js,vue index.js"
   },
   "keywords": [],
   "author": "Omniscient",
