@@ -14,7 +14,7 @@ const port = process.env.PORT || 80
 app.use(express.static("public"))
 
 expressVue.use(app, {
-    pagesPath: `${__dirname}/views`,
+    pagesPath: `${__dirname}\\views`,
     head: {
         title: "SkyTracker",
         metas: [],
