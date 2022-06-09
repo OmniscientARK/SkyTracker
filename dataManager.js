@@ -5,8 +5,7 @@ const keyManager = require("./keyManager")
 
 class DataManager{
     constructor(path){
-        this.dir = `/${path}`
-        console.log(this.dir)
+        this.dir = `${__dirname}/${path}`
         this.uuidSheet = `${this.dir}/uuids.json`
         this.nameSheet = `${this.dir}/names.json`
         if(!fs.existsSync(`${this.dir}`)) fs.mkdirSync(`${this.dir}`, {recursive: true})
