@@ -5,8 +5,7 @@ const router = require("./router")
 const keyManager = require("./keyManager")
 const dataManager = require("./dataManager")
 
-if(process.argv.length >= 2 && process.argv[2] === "true") process.env.VUE_DEV = true
-else process.env.VUE_DEV = false
+process.env.VUE_DEV = (process.argv.length >= 2 && process.argv[2] === "true")
 console.log(`VUE_DEV set to ${process.env.VUE_DEV}.`)
 
 const app =  express()
@@ -15,7 +14,7 @@ const port = process.env.PORT || 80
 app.use(express.static("public"))
 
 expressVue.use(app, {
-    pagesPath: `${__dirname}\\views`,
+    pagesPath: `./views`,
     head: {
         title: "SkyTracker",
         metas: [],
