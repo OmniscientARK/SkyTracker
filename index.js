@@ -11,7 +11,7 @@ console.log(`VUE_DEV set to ${process.env.VUE_DEV}.`)
 const app =  express()
 const port = process.env.PORT || 80
 
-app.use(express.static("public"))
+app.use(express.static(path.join(__dirname, "public")))
 
 expressVue.use(app, {
     pagesPath: path.join(__dirname, "views"),
