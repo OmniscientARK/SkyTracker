@@ -1,6 +1,6 @@
 const express = require("express")
 const expressVue = require("express-vue")
-const readline = require("readline")
+const path = require("path")
 const router = require("./router")
 const keyManager = require("./keyManager")
 const dataManager = require("./dataManager")
@@ -14,7 +14,7 @@ const port = process.env.PORT || 80
 app.use(express.static("public"))
 
 expressVue.use(app, {
-    pagesPath: `views`,
+    pagesPath: path.join(__dirname, "views"),
     head: {
         title: "SkyTracker",
         metas: [],
