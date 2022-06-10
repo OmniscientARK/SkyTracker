@@ -1,17 +1,17 @@
 const axios = require("axios")
-const { profile } = require("console")
+const path = require("path")
 const fs = require("fs")
 const keyManager = require("./keyManager")
 
 class DataManager{
-    constructor(path){
-        this.dir = `${path}`
+    constructor(dataPath){
+        this.dir = path.join(__dirname, dataPath)
         this.uuidSheet = `${this.dir}\\uuids.json`
         this.nameSheet = `${this.dir}\\names.json`
         if(!fs.existsSync(`${this.dir}`)) fs.mkdirSync(`${this.dir}`, {recursive: true})
         if(!fs.existsSync(this.uuidSheet)) fs.writeFileSync(this.uuidSheet, JSON.stringify({}))
         if(!fs.existsSync(this.nameSheet)) fs.writeFileSync(this.nameSheet, JSON.stringify({}))
-        console.log("DataManager initialized.")
+        console.log(`DataManager initialized @ ${this.dir}.`)
     }
 
     setUUID(player, uuid){
