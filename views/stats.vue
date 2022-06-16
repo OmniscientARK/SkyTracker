@@ -8,7 +8,7 @@
                     return {
                         id: member.uuid,
                         title: member.name,
-                        href: `/stats/${member.name}/${member.profileName}`
+                        href: `/stats/${member.name}/${member.profile.name}`
                     }
                 }).filter(member => member.id !== $root.player.uuid)">
                     <RankDisplay :rank="$root.player.rank"/>
@@ -23,6 +23,10 @@
                     }
                 }).filter(profile => profile.id !== $root.profile.id)">{{$root.player.skyblock.profiles.find(profile => profile.id === $root.profile.id).name}}</Selector>
             </h1>
+            <InventorySlot :item="$root.profile.inventory.armor[0]"></InventorySlot>
+            <pre>
+                {{JSON.stringify($root.profile.inventory, null, "\t")}}
+            </pre>
         </section>
     </section>
 </template>
@@ -31,9 +35,10 @@
 import Navigation from "./components/navigation.vue"
 import RankDisplay from "./components/rankDisplay.vue"
 import Selector from "./components/selector.vue"
+import InventorySlot from "./components/inventorySlot.vue"
 export default {
     components: {
-        Navigation, RankDisplay, Selector
+        Navigation, RankDisplay, Selector, InventorySlot
     },
     mounted() {
         window.history.replaceState({}, document.title, `/stats/${this.$root.player.name}/${this.$root.player.skyblock.profiles.find(profile => profile.id === this.$root.profile.id).name}`)

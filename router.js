@@ -21,6 +21,7 @@ let routes = [
                 if(data == null) return res.renderVue("index.vue", {error: "An error occurred."})
                 res.renderVue("stats.vue", data)
             }catch(ex){
+                console.log(ex)
                 res.renderVue("index.vue", {error: "An error occurred."})
             }
         }

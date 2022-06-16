@@ -26,7 +26,7 @@ expressVue.use(app, {
         ]
     }
 }).then(() => {
-    keyManager.registerKey("d231d6ff-a4ec-4660-b412-b0c5f244652a")
+    keyManager.registerKey("6fa57052-b629-4257-a2b8-3bf7e423e1e6")
     router.routes.forEach(route => {
         if(Object.keys(route).includes("get")) app.get(route.path, (req, res) => route.get(req, res))
         if(Object.keys(route).includes("post")) app.get(route.path, (req, res) => route.post(req, res))
